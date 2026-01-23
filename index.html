@@ -342,6 +342,7 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 let currentUser = null;
+let aiLoading = false;
 
   auth.onAuthStateChanged(user => {
   if (user) {
@@ -374,7 +375,18 @@ function startTest() {
   const topic = document.getElementById("topicSelect").value;
   if (!topic) return;
 
-  // ✅ HIDE OLD RESULTS WHEN NEW TEST STARTS
+  // 🔴 Block AI while loading
+  if (topic === "AI" && aiLoading) {
+    alert("AI questions are still generating. Please wait.");
+    return;
+  }
+
+  // 🔴 Ensure questions exist
+  if (!questionBank[topic] || questionBank[topic].length === 0) {
+    alert("No questions available for this topic.");
+    return;
+  }
+
   document.getElementById("resultCard").style.display = "none";
 
   questions = questionBank[topic];
@@ -391,7 +403,10 @@ function startTest() {
 }
 
 
+
 function showQuestion() {
+  if (!questions || currentIndex >= questions.length) return;
+
   visited[currentIndex] = true;
 
   const q = questions[currentIndex];
@@ -414,6 +429,7 @@ function showQuestion() {
 
   updatePalette();
 }
+
 
 
 
@@ -710,40 +726,41 @@ function logout() {
 
 async function generateFromAI() {
   const topic = document.getElementById("aiTopic").value.trim();
-
   if (!topic) {
-    alert("Please type a topic for AI");
+    alert("Enter a topic");
     return;
   }
 
-  alert("Generating questions using AI.\nFirst time may take ~30 seconds.");
+  aiLoading = true;
+  alert("Generating questions. Please wait...");
 
   try {
-    const res = await fetch(
-      "https://gemini-backend-heft.onrender.com/generate",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic })
-      }
-    );
+    const res = await fetch("https://gemini-backend-heft.onrender.com/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ topic })
+    });
 
     if (!res.ok) {
-      alert("AI limit reached or backend error");
+      const text = await res.text();
+      alert("Backend error: " + text);
       return;
     }
 
     const data = await res.json();
 
-    // 🔥 THIS IS THE ONLY INTEGRATION POINT
+    // ✅ Treat AI as just another topic
     questionBank["AI"] = data.questions;
 
-    alert("AI questions ready.\nNow select 'AI Generated' from topics.");
+    alert("AI questions ready. Select 'AI Generated' and start test.");
 
   } catch (err) {
-    alert("Backend is sleeping.\nPlease wait 30 seconds and try again.");
+    alert("Backend sleeping or network error");
+  } finally {
+    aiLoading = false;
   }
 }
+
 
 
 </script>
