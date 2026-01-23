@@ -268,15 +268,6 @@ blockquote span {
 
 <div class="introCard" style="max-width:900px; margin:auto;">
 <h1>Test Platform</h1>
-<input
-  id="aiTopic"
-  placeholder="Type a topic for AI (e.g. Ohm's Law)"
-  style="display:block; margin:15px auto; padding:10px; width:300px;"
->
-
-<button onclick="generateFromAI()" style="margin-bottom:10px;">
-  Generate Test using AI
-</button>
 
 <select id="topicSelect" onchange="startTest()">
   <option value="" selected disabled>-- Select Topic --</option>
@@ -284,7 +275,15 @@ blockquote span {
   <option value="CS_and_CG_MOSFET_Small_Signal">CS_and_CG_MOSFET_Small_Signal</option>
   <option value="AI">AI Generated</option>
 </select>
-  
+  <input
+  id="aiTopic"
+  placeholder="Type a topic for AI"
+  style="display:block; margin:15px auto; padding:10px; width:300px;"
+>
+
+<button onclick="generateFromAI()" style="margin-bottom:10px;">
+  Generate Test using AI
+</button>
 <button onclick="showResults()" style="margin-top:10px;">
   View Results
 </button>
