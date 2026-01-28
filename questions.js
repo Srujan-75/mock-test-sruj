@@ -223,116 +223,164 @@ const questionBank = {
 ]
 ,
 "CS_and_CG_MOSFET_Small_Signal": [
+ 
   {
-    question: "Why is small-signal analysis used in MOSFET amplifiers?",
+    question: "Source degeneration in a Common Source MOSFET amplifier primarily:",
     options: [
-      "To study switching behavior",
-      "To analyze cutoff region",
-      "To linearize operation around the Q-point",
-      "To increase drain current"
+      "Increases voltage gain",
+      "Reduces output resistance",
+      "Introduces negative feedback improving linearity",
+      "Eliminates channel length modulation"
     ],
     correct: 2,
-    explanation: "Small-signal analysis linearizes the MOSFET around a fixed DC operating point to study AC behavior."
+    explanation: "Adding a source resistor R_S introduces local negative feedback. The effective transconductance becomes gm_eff = gm / (1 + gmR_S). For large gmR_S, gm_eff ≈ 1/R_S, making the amplifier more linear and stable, increasing bandwidth but reducing gain."
   },
+
   {
-    question: "In the small-signal model of a MOSFET, what does the controlled current source represent?",
+    question: "Which parasitic capacitor is primarily responsible for the Miller Effect in a Common Source amplifier?",
     options: [
-      "Channel resistance",
-      "Gate leakage current",
-      "Transconductance effect (gₘvgs)",
-      "Output resistance"
-    ],
-    correct: 2,
-    explanation: "The dependent current source gₘvgs represents the transconductance of the MOSFET."
-  },
-  {
-    question: "The voltage gain of a Common Source amplifier (including rₒ) is given by",
-    options: [
-      "+ gₘ (R_D || rₒ)",
-      "- gₘ (R_D || rₒ)",
-      "- R_D / gₘ",
-      "+ 1 / (gₘ R_D)"
+      "C_gs",
+      "C_gd",
+      "C_db",
+      "C_sb"
     ],
     correct: 1,
-    explanation: "Common Source amplifier has gain −gₘ(R_D || rₒ), indicating phase inversion."
+    explanation: "C_gd connects the input (gate) and output (drain). Because the drain voltage is amplified and inverted, the effective capacitance seen at the input becomes C_gd(1 + |A_v|), known as Miller multiplication, which severely limits bandwidth."
   },
   {
-    question: "The phase shift introduced by a Common Source amplifier is",
+    question: "The intrinsic gain of a MOSFET operating in saturation is given by:",
     options: [
-      "0°",
-      "90°",
-      "180°",
-      "270°"
+      "g_m / r_o",
+      "g_m × r_o",
+      "1 / (g_m r_o)",
+      "r_o / g_m"
+    ],
+    correct: 1,
+    explanation: "Intrinsic gain is the maximum gain a single MOSFET can provide with an ideal load. It equals gm × r_o, the product of transconductance and output resistance, both device parameters."
+  },
+  {
+    question: "How does the voltage gain of a Common Source amplifier with an Active Load behave with respect to the bias current I_D?",
+    options: [
+      "Proportional to I_D",
+      "Proportional to √I_D",
+      "Proportional to 1/√I_D",
+      "Independent of I_D"
     ],
     correct: 2,
-    explanation: "The negative sign in voltage gain of CS amplifier indicates a 180° phase shift."
+    explanation: "Voltage gain A_v ≈ gm r_o. Since gm ∝ √I_D and r_o ∝ 1/I_D, the product gm r_o ∝ 1/√I_D. Thus gain decreases as bias current increases."
   },
   {
-    question: "The input resistance of a Common Source MOSFET amplifier is approximately",
+    question: "What is the phase shift between the input and output voltage of a Common Gate amplifier?",
+    options: [
+      "0 degrees (In-phase)",
+      "90 degrees",
+      "180 degrees (Out-of-phase)",
+      "45 degrees"
+    ],
+    correct: 0,
+    explanation: "In a CG amplifier, the input is at the source and output at the drain. An increase in source voltage reduces V_GS, reducing I_D, which reduces voltage drop across R_D and raises the drain voltage. Thus output rises when input rises — no phase inversion."
+  },
+  {
+    question: "The approximate output impedance of a Cascode amplifier (CS stage + CG stage) is:",
+    options: [
+      "r_o",
+      "g_m r_o^2",
+      "1/g_m",
+      "R_D"
+    ],
+    correct: 1,
+    explanation: "The Common Gate transistor increases the output resistance of the Common Source transistor by roughly a factor of gm r_o. Therefore R_out ≈ (gm r_o) × r_o = gm r_o^2."
+  },
+  {
+    question: "Which amplifier configuration is ideally suited for use as a Current Buffer?",
+    options: [
+      "Common Source",
+      "Source Follower",
+      "Common Gate",
+      "Cascode"
+    ],
+    correct: 2,
+    explanation: "The Common Gate amplifier has low input impedance, high output impedance, and approximately unity current gain, making it ideal for transferring current from a low-impedance source to a high-impedance load."
+  },
+  {
+    question: "If the Body Effect (g_mb) is considered in a Common Gate amplifier, the input impedance becomes approximately:",
+    options: [
+      "1 / g_m",
+      "1 / (g_m + g_mb)",
+      "r_o",
+      "g_m × r_o"
+    ],
+    correct: 1,
+    explanation: "Body effect introduces an additional transconductance g_mb in parallel with gm. Both contribute to small-signal current, so Z_in ≈ 1 / (gm + gmb)."
+  },
+  {
+    question: "What is the Unity Current Gain Frequency (f_T) of a MOSFET?",
+    options: [
+      "1 / (2π r_o C_db)",
+      "g_m / (2π C_db)",
+      "g_m / [2π (C_gs + C_gd)]",
+      "1 / (2π R_D C_gd)"
+    ],
+    correct: 2,
+    explanation: "f_T is the frequency where the short-circuit current gain becomes unity. It is determined by how fast gate capacitances can be charged: f_T = gm / [2π (Cgs + Cgd)]."
+  },
+  {
+    question: "In a Common Source amplifier, if the channel length L is doubled while keeping W/L constant, the intrinsic gain:",
+    options: [
+      "Remains constant",
+      "Doubles",
+      "Halves",
+      "Becomes zero"
+    ],
+    correct: 1,
+    explanation: "Intrinsic gain = gm r_o. With constant W/L and bias current, gm stays roughly constant. Channel length modulation parameter λ decreases as L increases, so r_o = 1/(λI_D) increases roughly proportional to L. Thus intrinsic gain increases approximately in proportion to L."
+  },
+  {
+    question: "Why is the Common Gate amplifier preferred in high-frequency RF applications?",
+    options: [
+      "It has infinite input impedance",
+      "It suppresses the Miller Effect",
+      "It has the highest voltage gain",
+      "It has zero output impedance"
+    ],
+    correct: 1,
+    explanation: "In CG configuration, the gate is AC-grounded. This shields the input (source) from drain voltage variations, preventing Cgd from creating Miller multiplication, improving high-frequency performance."
+  },
+  {
+    question: "The low-frequency input impedance of a Common Source amplifier is ideally:",
     options: [
       "Zero",
-      "1/gₘ",
-      "R_D",
-      "Infinite"
-    ],
-    correct: 3,
-    explanation: "The MOSFET gate draws negligible current, resulting in very high input resistance."
-  },
-  {
-    question: "In a Common Gate amplifier, the input signal is applied at the",
-    options: [
-      "Gate",
-      "Drain",
-      "Source",
-      "Body"
+      "1/g_m",
+      "Infinity",
+      "r_o"
     ],
     correct: 2,
-    explanation: "In a Common Gate configuration, the source terminal acts as the input."
+    explanation: "The MOSFET gate is insulated by an oxide layer, so no DC current flows into the gate. Therefore, the ideal low-frequency input impedance is infinite."
   },
   {
-    question: "The input resistance of a Common Gate amplifier is approximately equal to",
+    question: "For a Common Source amplifier with Source Degeneration R_S, the voltage gain A_v is approximately:",
     options: [
-      "R_D",
-      "rₒ",
-      "gₘ",
-      "1/gₘ"
-    ],
-    correct: 3,
-    explanation: "The input resistance of a CG amplifier is low and approximately equal to 1/gₘ."
-  },
-  {
-    question: "The voltage gain of a Common Gate amplifier is",
-    options: [
-      "Negative and high",
-      "Positive and high",
-      "Unity",
-      "Zero"
+      "-g_m R_D",
+      "-R_D / R_S (for g_m R_S >> 1)",
+      "R_D / R_S",
+      "1 / (g_m R_S)"
     ],
     correct: 1,
-    explanation: "Common Gate amplifier provides high positive voltage gain with no phase inversion."
+    explanation: "The gain is A_v = -g_m R_D / (1 + g_m R_S). When g_m R_S >> 1, this simplifies to A_v ≈ -R_D / R_S. The gain becomes set mainly by resistor ratio, improving stability and linearity."
   },
   {
-    question: "Which MOSFET amplifier configuration suffers from Miller effect?",
+    question: "Which parameter causes the finite output resistance (r_o) in a MOSFET?",
     options: [
-      "Common Gate",
-      "Common Drain",
-      "Common Source",
-      "Differential amplifier"
-    ],
-    correct: 2,
-    explanation: "Miller effect is significant in Common Source amplifiers due to gate-drain capacitance."
-  },
-  {
-    question: "Which MOSFET amplifier is most suitable for high-frequency applications?",
-    options: [
-      "Common Source",
-      "Common Gate",
-      "Common Drain",
-      "Emitter follower"
+      "Body effect",
+      "Channel Length Modulation",
+      "Mobility degradation",
+      "Subthreshold conduction"
     ],
     correct: 1,
-    explanation: "Common Gate amplifier has no Miller effect, making it suitable for high-frequency operation."
+    explanation: "Channel Length Modulation occurs when V_DS increases, shortening the effective channel length and slightly increasing drain current. This gives the transistor a finite slope in the I_D–V_DS curve, modeled as output resistance r_o."
   }
+
+
 ]
 
 };
