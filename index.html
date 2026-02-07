@@ -375,7 +375,6 @@ function startTest() {
   const topic = document.getElementById("topicSelect").value;
   if (!topic) return;
 
-  // 🔴 Ensure questions exist
   if (!questionBank[topic] || questionBank[topic].length === 0) {
     alert("No questions available for this topic.");
     return;
@@ -390,11 +389,14 @@ function startTest() {
   answers = new Array(questions.length).fill(null);
   visited = new Array(questions.length).fill(false);
 
+  // 🔥 SHOW BOTH
   document.getElementById("quizBox").style.display = "block";
+  document.getElementById("palette").style.display = "grid";   // <<< ADD THIS
 
   buildPalette();
   showQuestion();
 }
+
 
 
 
