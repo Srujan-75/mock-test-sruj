@@ -593,13 +593,17 @@ function googleLogin() {
   startTest();
 }
 
-  function showResults() {
+function showResults() {
   const topic = document.getElementById("topicSelect").value;
 
   if (!topic) {
     alert("Please select a topic to view results");
     return;
   }
+
+  reviewTopic = topic;
+  questions = questionBank[topic];
+
 
   const userRef = db.collection("users").doc(currentUser.uid);
 
@@ -706,6 +710,11 @@ function logout() {
 }
 
   function showDetailedAnswers() {
+
+
+  if (reviewTopic) {
+  questions = questionBank[reviewTopic];
+}
 
   if (!questions || questions.length === 0) {
     alert("No test data available.");
