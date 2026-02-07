@@ -239,7 +239,7 @@ blockquote span {
       <br><span>— Proverbs 18:15</span>
     </blockquote>
 
-    <button onclick="enterSite()">Start Test</button>
+    <button onclick="enterSite()">Let's Go</button>
   </div>
 </div>
 
@@ -273,17 +273,7 @@ blockquote span {
   <option value="" selected disabled>-- Select Topic --</option>
   <option value="Bible">Bible</option>
   <option value="CS_and_CG_MOSFET_Small_Signal">CS_and_CG_MOSFET_Small_Signal</option>
-  <option value="AI">AI Generated</option>
-</select>
-  <input
-  id="aiTopic"
-  placeholder="Type a topic for AI"
-  style="display:block; margin:15px auto; padding:10px; width:300px;"
->
 
-<button onclick="generateFromAI()" style="margin-bottom:10px;">
-  Generate Test using AI
-</button>
 <button onclick="showResults()" style="margin-top:10px;">
   View Results
 </button>
@@ -319,6 +309,14 @@ blockquote span {
   <div id="scoreCircle" class="score-circle"></div>
 
   <div id="bibleVerse" class="verse"></div>
+     <button onclick="showDetailedAnswers()" style="margin-top:20px; background:#6f42c1;">
+  View Detailed Answers
+</button>
+<button onclick="closeReview()" style="margin-top:20px; background:#6f42c2;">
+  Close Review
+</button>
+
+<div id="detailedAnswers" style="margin-top:20px; text-align:left;"></div>
 </div>
 
 </div>
@@ -330,7 +328,7 @@ blockquote span {
 
 
 <script>
-
+let reviewTopic = null;  
 const firebaseConfig = {
   apiKey: "AIzaSyARnpe77ST6LbagY3n6hdG4nRJTD9--vDs",
   authDomain: "mock-test-4ac5d.firebaseapp.com",
@@ -374,12 +372,6 @@ let score = 0;
 function startTest() {
   const topic = document.getElementById("topicSelect").value;
   if (!topic) return;
-
-  // 🔴 Block AI while loading
-  if (topic === "AI" && aiLoading) {
-    alert("AI questions are still generating. Please wait.");
-    return;
-  }
 
   // 🔴 Ensure questions exist
   if (!questionBank[topic] || questionBank[topic].length === 0) {
@@ -433,25 +425,12 @@ function showQuestion() {
 
 
 
-const SITE_PASSWORD = "Jesus is my Saviour";   // 🔐 change this anytime
+
 
 function enterSite() {
   document.getElementById("introScreen").classList.add("hiddenScreen");
   document.getElementById("passwordScreen").classList.remove("hiddenScreen");
 }
-
-function checkPassword() {
-  const entered = document.getElementById("passwordInput").value;
-
-  if (entered === SITE_PASSWORD) {
-    document.getElementById("passwordScreen").classList.add("hiddenScreen");
-    document.getElementById("siteContent").style.display = "block";
-  } else {
-    document.getElementById("passwordError").innerText =
-      "Incorrect password. Please try again.";
-  }
-}
-
 
 function nextQuestion() {
   const selected = document.querySelector('input[name="option"]:checked');
@@ -761,7 +740,91 @@ async function generateFromAI() {
   }
 }
 
+function showDetailedAnswers() {
+  const topic = document.getElementById("topicSelect").value;
 
+  // 1. Basic validation
+  if (!topic) {
+    alert("Please select a topic first.");
+    return;
+  }
+  if (!currentUser) {
+    alert("Please login first.");
+    return;
+  }
+
+  const userRef = db.collection("users").doc(currentUser.uid);
+
+  userRef.get().then(doc => {
+    if (!doc.exists) {
+      alert("You have not attempted this test yet.");
+      return;
+    }
+
+    const data = doc.data();
+    const attempts = data.history.filter(h => h.topic === topic);
+
+    if (attempts.length === 0) {
+      alert("You must attempt this topic at least once before viewing detailed answers.");
+      return;
+    }
+
+    // 🔒 Enable review mode for THIS topic
+    reviewTopic = topic;
+
+    // 🛠️ THE FIX: Hide the quiz elements so only the selection & answers remain
+    document.getElementById("quizBox").style.display = "none"; 
+    document.getElementById("palette").style.display = "none";
+    
+    // Ensure the results card (container for detailedAnswers) is visible
+    document.getElementById("resultCard").style.display = "block";
+
+    const container = document.getElementById("detailedAnswers");
+    container.innerHTML = "<h3>Detailed Answer Review</h3>";
+
+    // Ensure questions are loaded for the loop
+    if (!questions || questions.length === 0) {
+      questions = questionBank[topic];
+    }
+
+    questions.forEach((q, index) => {
+      const userAnsIndex = answers[index];
+      const correctIndex = q.correct;
+
+      // Logic to determine what the user picked vs reality
+      const userAnswer = (userAnsIndex !== null && userAnsIndex !== undefined) ? q.options[userAnsIndex] : "Not Attempted";
+      const correctAnswer = q.options[correctIndex];
+      const isCorrect = userAnsIndex === correctIndex;
+
+      container.innerHTML += `
+        <div style="margin-bottom:20px; padding:15px; border-radius:10px; background:#f9f9f9; border-left:6px solid ${isCorrect ? '#2ecc71' : '#e74c3c'}; text-align: left;">
+          <b>Q${index + 1}: ${q.question}</b><br><br>
+          <b>Your Answer:</b> ${userAnswer} <br>
+          <b>Correct Answer:</b> ${correctAnswer} <br><br>
+          <b>Explanation:</b> ${q.explanation || "No explanation provided."}
+        </div>
+      `;
+    });
+
+    container.scrollIntoView({ behavior: "smooth" });
+  });
+}
+function closeReview() {
+  // Reset the review flag
+  reviewTopic = null;
+
+  // Clear the detailed answers text
+  document.getElementById("detailedAnswers").innerHTML = "";
+  
+  // Hide the result card entirely
+  document.getElementById("resultCard").style.display = "none";
+
+  // Bring back the Palette (selection buttons)
+  document.getElementById("palette").style.display = "grid";
+  
+  // Scroll back to the topic selection area
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
 </script>
 
