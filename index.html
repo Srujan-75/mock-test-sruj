@@ -1,802 +1,302 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Mock Test Platform</title>
-   <style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-image: url("nature.png");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.25);
-  z-index: -1;
-}
-
-
-h1 {
-  text-align: center;
-}
-
-#quizBox {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 600px;
-  margin: auto;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-button {
-  margin-top: 15px;
-  padding: 10px 20px;
-  border: none;
-  background: #007bff;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #0056b3;
-}
-
-label {
-  display: block;
-  margin: 8px 0;
-}
-
-select {
-  display: block;
-  margin: 20px auto;
-  padding: 8px;
-  font-size: 16px;
-}
-
-/* 🌿 Intro Screen */
-#introScreen {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.introCard {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 30px;
-  border-radius: 15px;
-  text-align: center;
-  max-width: 400px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
-
-.studentImg {
-  width: 150px;
-  margin-bottom: 15px;
-}
-
-
-.introCard h2 {
-  margin-bottom: 10px;
-}
-
-.introCard p {
-  font-size: 15px;
-  color: #333;
-}
-
-blockquote {
-  font-style: italic;
-  margin: 15px 0;
-  color: #2c3e50;
-}
-
-blockquote span {
-  font-size: 13px;
-  color: #555;
-}
-
-#siteContent {
-  min-height: 100vh;
-  padding: 30px;
-}
-
-/* 🔐 Password Screen */
-#passwordScreen {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#passwordScreen input {
-  padding: 10px;
-  width: 220px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  outline: none;
-  text-align: center;
-}
-
-.hiddenScreen {
-  display: none !important;
-}
-
-#palette {
-  width: 160px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  align-content: start;
-}
-
-.palette-btn {
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  font-size: 13px;
-  font-weight: bold;
-  border: 1px solid #999;
-  cursor: pointer;
-  background: #fff;
-  border-radius: 4px;
-}
-.palette-current {
-  border: 2px solid #007bff;
-}
-
-
-
-.palette-answered {
-  background: #4caf50;
-  color: white;
-}
-
-.palette-seen {
-  background: #f44336;
-  color: white;
-}
-
-/* 🎯 Result Card */
-#resultCard {
-  background: rgba(255, 255, 255, 0.95);
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 30px;
-  border-radius: 16px;
-  text-align: center;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-}
-
-/* 🔵 Score Circle */
-.score-circle {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  margin: 20px auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  font-weight: bold;
-  color: white;
-}
-
-.score-good {
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
-}
-
-.score-average {
-  background: linear-gradient(135deg, #f1c40f, #f39c12);
-}
-
-.score-poor {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
-}
-
-/* 📖 Verse */
-.verse {
-  margin-top: 20px;
-  font-style: italic;
-  font-size: 16px;
-  color: #2c3e50;
-}
-
-.verse span {
-  display: block;
-  margin-top: 6px;
-  font-size: 14px;
-  color: #555;
-}
-
-</style>
-</head>
-<body>
-
-<div id="introScreen">
-  <div class="introCard">
-    <img src="student.png" alt="Student" class="studentImg">
-
-    <h2>Hi! Welcome 👋</h2>
-
-    <p>
-      I’m here to help you test your knowledge and grow step by step.
-      Take a deep breath, focus, and give your best!
-    </p>
-
-    <blockquote>
-      “The mind of the prudent acquires knowledge,
-      and the ear of the wise seeks knowledge.”
-      <br><span>— Proverbs 18:15</span>
-    </blockquote>
-
-    <button onclick="enterSite()">Let's Go</button>
-  </div>
-</div>
-
-<div id="passwordScreen" class="hiddenScreen">
-
-<div class="introCard">
-  <h2>Login Required</h2>
-  <p>Please sign in using Google to continue</p>
-
-  <button onclick="googleLogin()">Login with Google</button>
-
-  <p id="loginError" style="color:red;"></p>
+const questionBank = {
+  Bible: [
+    {
+      question: "Who is the first man according to the Bible?",
+      options: ["Noah", "Abraham", "Adam", "Moses"],
+      correct: 2,
+      explanation: "According to Genesis, Adam is the first man created by God."
+    },
+    {
+      question: "Who built the ark to survive the great flood?",
+      options: ["Moses", "Noah", "David", "Solomon"],
+      correct: 1,
+      explanation: "God instructed Noah to build the ark to save his family and animals."
+    },
+    {
+      question: "Which book of the Bible begins with the creation of the world?",
+      options: ["Exodus", "Genesis", "Leviticus", "Psalms"],
+      correct: 1,
+      explanation: "Genesis starts with the account of creation."
+    },
+    {
+      question: "Who led the Israelites out of Egypt?",
+      options: ["Joshua", "Aaron", "Moses", "Joseph"],
+      correct: 2,
+      explanation: "Moses led the Israelites during the Exodus."
+    },
+    {
+      question: "On which mountain did Moses receive the Ten Commandments?",
+      options: ["Mount Carmel", "Mount Sinai", "Mount Zion", "Mount Nebo"],
+      correct: 1,
+      explanation: "Moses received the Ten Commandments on Mount Sinai."
+    },
+    {
+      question: "Who was swallowed by a great fish according to the Bible?",
+      options: ["Elijah", "Jonah", "Job", "Daniel"],
+      correct: 1,
+      explanation: "Jonah was swallowed by a great fish after fleeing from God’s command."
+    },
+    {
+      question: "Who defeated Goliath?",
+      options: ["Saul", "Samuel", "David", "Solomon"],
+      correct: 2,
+      explanation: "David defeated Goliath with a sling and a stone."
+    },
+    {
+      question: "Which king was known for his wisdom?",
+      options: ["David", "Saul", "Solomon", "Hezekiah"],
+      correct: 2,
+      explanation: "King Solomon was renowned for his wisdom."
+    },
+    {
+      question: "Who was the first king of Israel?",
+      options: ["David", "Solomon", "Saul", "Samuel"],
+      correct: 2,
+      explanation: "Saul was anointed as the first king of Israel."
+    },
+    {
+      question: "Which book contains the Psalms?",
+      options: ["Proverbs", "Isaiah", "Psalms", "Ecclesiastes"],
+      correct: 2,
+      explanation: "The Book of Psalms is a collection of songs and prayers."
+    },
+    {
+      question: "Who is considered the father of many nations?",
+      options: ["Isaac", "Jacob", "Abraham", "Joseph"],
+      correct: 2,
+      explanation: "God promised Abraham that he would be the father of many nations."
+    },
+    {
+      question: "Who interpreted dreams in Egypt?",
+      options: ["Daniel", "Joseph", "Moses", "Aaron"],
+      correct: 1,
+      explanation: "Joseph interpreted Pharaoh’s dreams in Egypt."
+    },
+    {
+      question: "Which prophet was taken to heaven in a chariot of fire?",
+      options: ["Elijah", "Elisha", "Isaiah", "Jeremiah"],
+      correct: 0,
+      explanation: "Elijah was taken up to heaven in a chariot of fire."
+    },
+    {
+      question: "Who wrote most of the Proverbs?",
+      options: ["David", "Solomon", "Moses", "Samuel"],
+      correct: 1,
+      explanation: "Many Proverbs are attributed to King Solomon."
+    },
+    {
+      question: "Who was thrown into the lions’ den?",
+      options: ["Joseph", "Jeremiah", "Daniel", "Ezekiel"],
+      correct: 2,
+      explanation: "Daniel was thrown into the lions’ den for praying to God."
+    },
+    {
+      question: "Who betrayed Jesus?",
+      options: ["Peter", "John", "Judas Iscariot", "Thomas"],
+      correct: 2,
+      explanation: "Judas Iscariot betrayed Jesus for thirty pieces of silver."
+    },
+    {
+      question: "Where was Jesus born?",
+      options: ["Nazareth", "Jerusalem", "Bethlehem", "Galilee"],
+      correct: 2,
+      explanation: "Jesus was born in Bethlehem."
+    },
+    {
+      question: "Who baptized Jesus?",
+      options: ["Peter", "John the Baptist", "Paul", "James"],
+      correct: 1,
+      explanation: "John the Baptist baptized Jesus in the Jordan River."
+    },
+    {
+      question: "Which disciple denied Jesus three times?",
+      options: ["John", "Peter", "Andrew", "Philip"],
+      correct: 1,
+      explanation: "Peter denied Jesus three times before the rooster crowed."
+    },
+    {
+      question: "Which book is the last book of the Bible?",
+      options: ["Jude", "Hebrews", "Revelation", "Acts"],
+      correct: 2,
+      explanation: "Revelation is the final book of the Bible."
+    }
+  ],
+  CS_and_CG_MOSFET_Small_Signal: [
+      {
+        question: "Source degeneration in a Common Source MOSFET amplifier primarily:",
+        options: [
+          "Increases voltage gain",
+          "Reduces output resistance",
+          "Introduces negative feedback improving linearity",
+          "Eliminates channel length modulation"
+        ],
+        correct: 2,
+        explanation: "Adding a source resistor R_S introduces local negative feedback, improving linearity at the cost of gain.",
+        assumptions: ["Small-signal operation", "Transistor in saturation"]
+      },
+      {
+        question: "Which parasitic capacitor is primarily responsible for the Miller Effect in a Common Source amplifier?",
+        options: ["C_gs", "C_gd", "C_db", "C_sb"],
+        correct: 1,
+        explanation: "C_gd connects input and output. Due to voltage gain, it appears multiplied at the input.",
+        assumptions: ["Small-signal model valid"]
+      },
+      {
+        question: "The intrinsic gain of a MOSFET operating in saturation is given by:",
+        options: ["g_m / r_o", "g_m × r_o", "1 / (g_m r_o)", "r_o / g_m"],
+        correct: 1,
+        explanation: "Intrinsic gain equals gm × r_o.",
+        assumptions: ["Long-channel device"]
+      },
+      {
+        question: "How does the voltage gain of a Common Source amplifier with an Active Load behave with respect to the bias current I_D?",
+        options: [
+          "Proportional to I_D",
+          "Proportional to √I_D",
+          "Proportional to 1/√I_D",
+          "Independent of I_D"
+        ],
+        correct: 2,
+        explanation: "Since gm ∝ √I_D and r_o ∝ 1/I_D, gain ∝ 1/√I_D.",
+        assumptions: ["Long-channel square-law model"]
+      },
+      {
+        question: "What is the phase shift between the input and output voltage of a Common Gate amplifier?",
+        options: ["0 degrees (In-phase)", "90 degrees", "180 degrees (Out-of-phase)", "45 degrees"],
+        correct: 0,
+        explanation: "CG amplifiers are non-inverting, resulting in a 0-degree phase shift.",
+        assumptions: ["Saturation region"]
+      },
+      {
+        question: "The approximate output impedance of a Cascode amplifier (CS stage + CG stage) is:",
+        options: ["r_o", "g_m r_o^2", "1/g_m", "R_D"],
+        correct: 1,
+        explanation: "R_out ≈ g_m r_o^2, as the CG stage multiplies the resistance of the CS stage.",
+        assumptions: ["Identical transistors", "g_m r_o >> 1"]
+      },
+      {
+        question: "Which amplifier configuration is ideally suited for use as a Current Buffer?",
+        options: ["Common Source", "Source Follower", "Common Gate", "Cascode"],
+        correct: 2,
+        explanation: "Common Gate has unity current gain and low input impedance, perfect for buffering current.",
+        assumptions: ["Small-signal operation"]
+      },
+      {
+        question: "If the Body Effect (g_mb) is considered in a Common Gate amplifier, the input impedance becomes approximately:",
+        options: ["1 / g_m", "1 / (g_m + g_mb)", "r_o", "g_m × r_o"],
+        correct: 1,
+        explanation: "Body effect increases the effective transconductance, lowering input impedance to 1/(gm + gmb).",
+        assumptions: ["Body effect modeled as g_mb"]
+      },
+      {
+        question: "What is the Unity Current Gain Frequency (f_T) of a MOSFET?",
+        options: [
+          "1 / (2π r_o C_db)",
+          "g_m / (2π C_db)",
+          "g_m / [2π (C_gs + C_gd)]",
+          "1 / (2π R_D C_gd)"
+        ],
+        correct: 2,
+        explanation: "f_T is defined as g_m / [2π (C_gs + C_gd)].",
+        assumptions: ["Intrinsic device only"]
+      },
+      {
+        question: "In a Common Source amplifier, if the channel length L is doubled while keeping W/L constant, the intrinsic gain:",
+        options: ["Remains constant", "Doubles", "Halves", "Becomes zero"],
+        correct: 1,
+        explanation: "Doubling L increases r_o proportionally while keeping g_m constant, thus doubling intrinsic gain.",
+        assumptions: ["Bias current fixed"]
+      },
+      {
+        question: "Why is the Common Gate amplifier preferred in high-frequency RF applications?",
+        options: [
+          "It has infinite input impedance",
+          "It suppresses the Miller Effect",
+          "It has the highest voltage gain",
+          "It has zero output impedance"
+        ],
+        correct: 1,
+        explanation: "The grounded gate shields input from output, eliminating Miller multiplication.",
+        assumptions: ["High-frequency analysis"]
+      },
+      {
+        question: "The low-frequency input impedance of a Common Source amplifier is ideally:",
+        options: ["Zero", "1/g_m", "Infinity", "r_o"],
+        correct: 2,
+        explanation: "Because the gate is insulated, it draws no DC current at low frequencies.",
+        assumptions: ["Ideal MOSFET"]
+      },
+      {
+        question: "In a Common Source amplifier with a resistive load R_D, what is the dominant pole frequency (approximately)?",
+        options: [
+          "1 / [2π R_sig (C_gs + (1 + |A_v|)C_gd)]",
+          "g_m / (2π C_gs)",
+          "1 / (2π R_D C_db)",
+          "1 / (2π R_sig C_gd)"
+        ],
+        correct: 0,
+        explanation: "The dominant pole is typically formed by the input Miller capacitance and source resistance R_sig.",
+        assumptions: ["R_sig is significant"]
+      },
+      {
+        question: "What happens to the input-referred thermal noise voltage of a MOSFET as the transconductance (g_m) increases?",
+        options: ["It increases", "It decreases", "It remains constant", "It depends only on the load resistor"],
+        correct: 1,
+        explanation: "Thermal noise voltage spectral density is inversely proportional to g_m.",
+        assumptions: ["Thermal noise dominates"]
+      },
+      {
+        question: "Which of the following is a primary disadvantage of a Cascode amplifier compared to a single-stage Common Source amplifier?",
+        options: [
+          "Lower voltage gain",
+          "Lower output impedance",
+          "Reduced output voltage swing (headroom)",
+          "Increased Miller Effect"
+        ],
+        correct: 2,
+        explanation: "Stacking transistors reduces the available voltage range (headroom) for the output signal.",
+        assumptions: ["Fixed V_DD"]
+      },
+      {
+        question: "In a Common Gate amplifier, what is the short-circuit current gain (A_is)?",
+        options: ["Approximately -g_m r_o", "Approximately 1 (Unity)", "Approximately 0", "g_m R_D"],
+        correct: 1,
+        explanation: "Virtually all source current reaches the drain, resulting in unity current gain.",
+        assumptions: ["Low frequency"]
+      },
+      {
+        question: "If a MOSFET is used as a voltage-controlled resistor (triode region), how does the resistance R_on change with (V_GS - V_th)?",
+        options: ["Increases linearly", "Decreases inversely", "Remains constant", "Increases quadratically"],
+        correct: 1,
+        explanation: "R_on is inversely proportional to the overdrive voltage (V_GS - V_th).",
+        assumptions: ["Deep triode region"]
+      },
+      {
+        question: "In a Common Source amplifier, the addition of a bypass capacitor across the source resistor R_S serves to:",
+        options: [
+          "Reduce the DC bias current",
+          "Increase the high-frequency gain to -g_m R_D",
+          "Decrease the input impedance",
+          "Increase the output resistance at all frequencies"
+        ],
+        correct: 1,
+        explanation: "The capacitor shorts R_S for AC signals, removing degeneration and maximizing gain.",
+        assumptions: ["Capacitor is large"]
+      },
+      {
+        question: "The 'Transit Time' of a MOSFET is inversely proportional to which frequency parameter?",
+        options: ["3-dB bandwidth", "Unity current gain frequency (f_T)", "Lower cutoff frequency (f_L)", "Slew rate"],
+        correct: 1,
+        explanation: "Transit time is the inverse of the speed limit represented by f_T.",
+        assumptions: ["Drift-limited transport"]
+      },
+      {
+        question: "For a MOSFET in saturation, if the drain-to-source voltage (V_DS) is increased significantly, the 'Effective Channel Length' decreases. This is known as:",
+        options: ["Velocity Saturation", "Channel Length Modulation", "The Body Effect", "Drain-Induced Barrier Lowering (DIBL)"],
+        correct: 1,
+        explanation: "CLM causes the effective length to shrink as V_DS rises.",
+        assumptions: ["Standard MOSFET physics"]
+      }
+    ]
   
-</div>
-
-</div>
-
-<div id="siteContent" style="display:none;">
-
-  <div style="text-align:right; margin-bottom:10px;">
-  <button onclick="logout()" style="background:#dc3545;">
-    Logout
-  </button>
-</div>
-
-
-<div class="introCard" style="max-width:900px; margin:auto;">
-<h1>Test Platform</h1>
-
-<select id="topicSelect" onchange="startTest()">
-  <option value="" selected disabled>-- Select Topic --</option>
-  <option value="Bible">Bible</option>
-  <option value="CS_and_CG_MOSFET_Small_Signal">CS_and_CG_MOSFET_Small_Signal</option>
-</select>
-
-<button onclick="showResults()" style="margin-top:10px;">
-  View Results
-</button>
-
-<button onclick="retestTopic()" style="margin-top:10px; background:#28a745;">
-  Retest
-</button>
-
-
-
-<div style="display:flex; gap:20px; justify-content:center;">
-
-  <!-- Question Area -->
-  <div id="quizBox" style="display:none; margin-top:20px;">
-    <h3 id="questionText"></h3>
-    <div id="options"></div>
-   <div style="display:flex; gap:10px; justify-content:center;">
-  <button onclick="prevQuestion()">Previous</button>
-  <button onclick="nextQuestion()">Next</button>
-</div>
-
-  </div>
-
-  <!-- Question Palette -->
-  <div id="palette"></div>
-
-</div>
-</div>
-
-
-  <div id="resultCard" style="display:none;">
-  <h2>Test Result</h2>
-
-  <div id="scoreCircle" class="score-circle"></div>
-
-  <div id="bibleVerse" class="verse"></div>
-     <button onclick="showDetailedAnswers()" style="margin-top:20px; background:#6f42c1;">
-  View Detailed Answers
-</button>
-<button onclick="closeReview()" style="margin-top:20px; background:#6f42c2;">
-  Close Review
-</button>
-
-<div id="detailedAnswers" style="margin-top:20px; text-align:left;"></div>
-</div>
-
-</div>
-<script src="questions.js"></script>
-
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-
-<script>
-let reviewTopic = null;  
-const firebaseConfig = {
-  apiKey: "AIzaSyARnpe77ST6LbagY3n6hdG4nRJTD9--vDs",
-  authDomain: "mock-test-4ac5d.firebaseapp.com",
-  projectId: "mock-test-4ac5d",
-  appId: "1:704532603753:web:a699e6ac03b2277a7153f8"
 };
-
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-let currentUser = null;
-let aiLoading = false;
-
-  auth.onAuthStateChanged(user => {
-  if (user) {
-    currentUser = {
-      uid: user.uid,
-      name: user.displayName,
-      email: user.email
-    };
-
-    // Hide intro & login screens
-    document.getElementById("introScreen").classList.add("hiddenScreen");
-    document.getElementById("passwordScreen").classList.add("hiddenScreen");
-
-    // Show main site
-    document.getElementById("siteContent").style.display = "block";
-
-    console.log("Auto-login:", user.email);
-  }
-});
-
-
-let answers = [];       // stores selected option index or null
-let visited = [];       // true if question was opened
-
-let questions = [];
-let currentIndex = 0;
-let score = 0;
-
-function startTest() {
-  const topic = document.getElementById("topicSelect").value;
-  if (!topic) return;
-
-  if (!questionBank[topic] || questionBank[topic].length === 0) {
-    alert("No questions available for this topic.");
-    return;
-  }
-
-  document.getElementById("resultCard").style.display = "none";
-
-  questions = questionBank[topic];
-  currentIndex = 0;
-  score = 0;
-
-  answers = new Array(questions.length).fill(null);
-  visited = new Array(questions.length).fill(false);
-
-  // 🔥 SHOW BOTH
-  document.getElementById("quizBox").style.display = "block";
-  document.getElementById("palette").style.display = "grid";   // <<< ADD THIS
-
-  buildPalette();
-  showQuestion();
-}
-
-
-
-
-function showQuestion() {
-  if (!questions || currentIndex >= questions.length) return;
-
-  visited[currentIndex] = true;
-
-  const q = questions[currentIndex];
-  document.getElementById("questionText").innerText =
-    `${currentIndex + 1}. ${q.question}`;
-
-  const optionsDiv = document.getElementById("options");
-  optionsDiv.innerHTML = "";
-
-  q.options.forEach((opt, i) => {
-    const checked = answers[currentIndex] === i ? "checked" : "";
-    optionsDiv.innerHTML += `
-      <label>
-        <input type="radio" name="option" value="${i}" ${checked}
-               onchange="saveAnswer(${i})">
-        ${opt}
-      </label><br>
-    `;
-  });
-
-  updatePalette();
-}
-
-
-
-
-
-
-function enterSite() {
-  document.getElementById("introScreen").classList.add("hiddenScreen");
-  document.getElementById("passwordScreen").classList.remove("hiddenScreen");
-}
-
-function nextQuestion() {
-  const selected = document.querySelector('input[name="option"]:checked');
-
-  if (!selected) {
-    alert("Please select an answer");
-    return;
-  }
-
-  if (currentIndex < questions.length - 1) {
-    currentIndex++;
-    showQuestion();
-  } else {
-    finishTest();
-  }
-}
-function prevQuestion() {
-  if (currentIndex > 0) {
-    currentIndex--;
-    showQuestion();
-  }
-}
-
-  
-  
-function finishTest() {
-  let score = 0;
-
-  answers.forEach((ans, index) => {
-    if (ans !== null && ans === questions[index].correct) {
-      score++;
-    }
-  });
-
-  const topic = document.getElementById("topicSelect").value;
-
-  // 🔥 SAVE RESULT TO FIRESTORE (SILENTLY)
-  const userRef = db.collection("users").doc(currentUser.uid);
-
-  userRef.get().then(doc => {
-    let data;
-
-    if (doc.exists) {
-      data = doc.data();
-    } else {
-      data = {
-        name: currentUser.name,
-        email: currentUser.email,
-        attempts: 0,
-        bestScore: 0,
-        history: []
-      };
-    }
-
-    data.attempts += 1;
-
-    if (score > data.bestScore) {
-      data.bestScore = score;
-    }
-
-    data.history.push({
-      topic: topic,
-      score: score,
-      total: questions.length,
-      time: new Date().toLocaleString()
-    });
-
-    userRef.set(data);
-  });
-
-  // ✅ END EXAM MODE (NO RESULTS SHOWN)
-  document.getElementById("quizBox").style.display = "none";
-  document.getElementById("palette").style.display = "none";
-
-  alert("Test submitted successfully. Click 'View Results' to see your score.");
-}
-
-
- function buildPalette() {
-  const palette = document.getElementById("palette");
-  palette.innerHTML = "";
-
-  questions.forEach((_, index) => {
-    const btn = document.createElement("button");
-    btn.innerText = index + 1;
-    btn.className = "palette-btn";
-    btn.onclick = () => goToQuestion(index);
-    palette.appendChild(btn);
-  });
-}
-
-  function saveAnswer(optionIndex) {
-  answers[currentIndex] = optionIndex;
-  updatePalette();
-}
-
-function updatePalette() {
-  const buttons = document.querySelectorAll("#palette button");
-
-  buttons.forEach((btn, index) => {
-    btn.classList.remove("palette-answered", "palette-seen", "palette-current");
-
-    if (answers[index] !== null) {
-      btn.classList.add("palette-answered");
-    } else if (visited[index]) {
-      btn.classList.add("palette-seen");
-    }
-
-    if (index === currentIndex) {
-      btn.classList.add("palette-current");
-    }
-  });
-}
-
-  function goToQuestion(index) {
-  currentIndex = index;
-  showQuestion();
-}
-
-
-
-function googleLogin() {
-  const provider = new firebase.auth.GoogleAuthProvider();
-
-  auth.signInWithPopup(provider)
-    .then(result => {
-      const user = result.user;
-
-      currentUser = {
-        uid: user.uid,
-        name: user.displayName,
-        email: user.email
-      };
-
-      document.getElementById("passwordScreen").classList.add("hiddenScreen");
-      document.getElementById("siteContent").style.display = "block";
-
-      alert(`Welcome ${user.displayName}`);
-    })
-    .catch(error => {
-      document.getElementById("loginError").innerText = error.message;
-    });
-}
-
-
-  function retestTopic() {
-  const topic = document.getElementById("topicSelect").value;
-
-  if (!topic) {
-    alert("Please select a topic first");
-    return;
-  }
-
-  // Hide results
-  document.getElementById("resultCard").style.display = "none";
-
-  // Restart test (reuse existing logic)
-  startTest();
-}
-
-  function showResults() {
-  const topic = document.getElementById("topicSelect").value;
-
-  if (!topic) {
-    alert("Please select a topic to view results");
-    return;
-  }
-
-  const userRef = db.collection("users").doc(currentUser.uid);
-
-  userRef.get().then(doc => {
-    if (!doc.exists) {
-      alert("No results found");
-      return;
-    }
-
-    const data = doc.data();
-    const attempts = data.history.filter(h => h.topic === topic);
-
-    if (attempts.length === 0) {
-      alert("No attempts for this topic yet");
-      return;
-    }
-
-    // 🔵 Latest attempt
-    const latest = attempts[attempts.length - 1];
-    const percentage = (latest.score / latest.total) * 100;
-
-    const card = document.getElementById("resultCard");
-    const circle = document.getElementById("scoreCircle");
-    const verseBox = document.getElementById("bibleVerse");
-
-    card.style.display = "block";
-    circle.innerText = `${latest.score} / ${latest.total}`;
-
-    if (percentage >= 75) {
-      circle.className = "score-circle score-good";
-      verseBox.innerHTML = `
-        “Thanks be to God, who gives us the victory through our Lord Jesus Christ”
-        <span>— 1 Corinthians 15:57</span>
-      `;
-    }
-    else if (percentage >= 25) {
-      circle.className = "score-circle score-average";
-      verseBox.innerHTML = `
-        “The horse is made ready for the day of battle, but victory belongs to the LORD”
-        <span>— Proverbs 21:31</span>
-      `;
-    }
-    else {
-      circle.className = "score-circle score-poor";
-      verseBox.innerHTML = `
-        “Though your beginning was small, your latter end will greatly increase”
-        <span>— Job 8:7</span>
-      `;
-    }
-
-    // 📊 History Table
-    let tableHTML = `
-      <h3 style="margin-top:30px;">Previous Attempts (${topic})</h3>
-      <table style="width:100%; border-collapse:collapse;">
-        <tr style="background:#f2f2f2;">
-          <th style="border:1px solid #ccc; padding:8px;">Attempt</th>
-          <th style="border:1px solid #ccc; padding:8px;">Score</th>
-          <th style="border:1px solid #ccc; padding:8px;">Date & Time</th>
-        </tr>
-    `;
-
-    attempts.forEach((a, index) => {
-      tableHTML += `
-        <tr>
-          <td style="border:1px solid #ccc; padding:8px;">${index + 1}</td>
-          <td style="border:1px solid #ccc; padding:8px;">
-            ${a.score} / ${a.total}
-          </td>
-          <td style="border:1px solid #ccc; padding:8px;">
-            ${a.time}
-          </td>
-        </tr>
-      `;
-    });
-
-    tableHTML += `</table>`;
-
-    verseBox.innerHTML += tableHTML;
-
-    card.scrollIntoView({ behavior: "smooth" });
-  });
-}
-function logout() {
-  auth.signOut().then(() => {
-
-    // Clear user state
-    currentUser = null;
-
-    // Reset UI
-    document.getElementById("siteContent").style.display = "none";
-    document.getElementById("quizBox").style.display = "none";
-    document.getElementById("palette").style.display = "none";
-    document.getElementById("resultCard").style.display = "none";
-
-    // Reset selections
-    document.getElementById("topicSelect").selectedIndex = 0;
-
-    // Show welcome screen again
-    document.getElementById("introScreen").classList.remove("hiddenScreen");
-    document.getElementById("passwordScreen").classList.add("hiddenScreen");
-
-    alert("You have been logged out successfully.");
-  });
-}
-
-  function showDetailedAnswers() {
-
-  if (!questions || questions.length === 0) {
-    alert("No test data available.");
-    return;
-  }
-
-  // 🔒 Hide quiz interface
-  document.getElementById("quizBox").style.display = "none";
-  document.getElementById("palette").style.display = "none";
-
-  const resultCard = document.getElementById("resultCard");
-  const container = document.getElementById("detailedAnswers");
-
-  container.innerHTML = "";
-  resultCard.style.display = "block";
-
-  questions.forEach((q, index) => {
-
-    const userAnswer = answers[index];
-    const correctAnswer = q.correct;
-
-    let optionsHTML = "";
-
-    q.options.forEach((opt, i) => {
-
-      let style = "";
-      let prefix = "";
-
-      if (i === correctAnswer) {
-        style = "color: green; font-weight: bold;";
-        prefix = "✔ ";
-      }
-
-      if (i === userAnswer && userAnswer !== correctAnswer) {
-        style = "color: red; font-weight: bold;";
-        prefix = "✘ ";
-      }
-
-      optionsHTML += `
-        <div style="${style}">
-          ${prefix}${String.fromCharCode(65 + i)}. ${opt}
-        </div>
-      `;
-    });
-
-    let userAnswerText = userAnswer !== null
-      ? q.options[userAnswer]
-      : "Not Attempted";
-
-    container.innerHTML += `
-      <div style="margin-bottom:30px; padding:20px; background:#f8f9fa; border-radius:12px;">
-        
-        <h4>Q${index + 1}. ${q.question}</h4>
-
-        ${optionsHTML}
-
-        <div style="margin-top:10px; font-weight:bold;">
-          Your Answer: ${userAnswerText}
-        </div>
-
-        <div style="margin-top:10px; padding:10px; background:#eef3ff; border-left:4px solid #007bff;">
-          <strong>Explanation:</strong> ${q.explanation}
-        </div>
-
-      </div>
-    `;
-  });
-
-  container.style.display = "block";
-  container.scrollIntoView({ behavior: "smooth" });
-}
-function closeReview() {
-
-  document.getElementById("detailedAnswers").style.display = "none";
-  document.getElementById("detailedAnswers").innerHTML = "";
-
-  // Show quiz back (if topic selected)
-  if (questions.length > 0) {
-    document.getElementById("quizBox").style.display = "block";
-    document.getElementById("palette").style.display = "grid";
-  }
-
-  document.getElementById("resultCard").scrollIntoView({ behavior: "smooth" });
-}
-
-
-</script>
-
-</body>
-
-
-</html>
